@@ -7,3 +7,7 @@ text="HelloWorld_Text"
 print(text)
 
 
+print("HelloWorld")
+
+text="HelloWorld_Text"
+print(text)
