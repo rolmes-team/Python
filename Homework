@@ -1,1 +1,59 @@
-Share homework code
+from gtts import gTTS
+from pygame import mixer # Load the required library to play
+import os
+import cv2
+import sys
+
+
+def voicesay( str ):
+    mixer.init()
+    mixer.music.load(r"C:\Users\User\%s.mp3" % (str) )
+    mixer.music.play()
+    return;
+
+# Create the haar cascade
+faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+video_capture = cv2.VideoCapture(0)
+
+tmp_f = 0
+
+while True:
+    # Capture frame-by-frame
+    ret, frame = video_capture.read()
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    faces = faceCascade.detectMultiScale(
+        gray,
+        scaleFactor=1.2,
+        minNeighbors=5,
+        minSize=(30, 30),
+        flags = cv2.CASCADE_SCALE_IMAGE
+    )
+    
+    
+    if len(faces) != tmp_f:
+        if len(faces) == 1:
+            voicesay("hello1")
+        elif len(faces) > 1:
+            voicesay("hello2")
+        
+        tmp_f = len(faces)
+    
+    
+    # Draw a rectangle around the faces
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+    # Display the resulting frame  
+    cv2.imshow('My_webcam_Video', frame) #display the webcam video
+    
+    tmp_f = len(faces)
+    
+    if cv2.waitKey(1) & 0xFF == ord('s'): #save on pressing 's' 
+        cv2.imwrite('Face_webcam.png',frame)
+        cv2.destroyAllWindows()
+        break
+
+video_capture.release()
